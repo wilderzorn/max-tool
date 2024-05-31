@@ -1,6 +1,7 @@
 import { useThrottleFn } from 'ahooks';
 import React from 'react';
 import emitter from './events';
+import { useNotification } from 'rc-notification';
 
 export function useResize(cb, time = 500) {
   const isMounted = React.useRef(false);
@@ -65,4 +66,38 @@ export const useTRState = (initValue = {}, reduce) => {
     dispatch({ type: type, data: m });
   }, []);
   return [state, setState];
+};
+/**
+ * @description: 弹窗
+ * @param {*} config
+ * @return {*}
+ */
+export const TRNotification = (config = {}) => {
+  const staticState = useStaticState({
+    keyMap: new Map(),
+    __currentKey: null,
+  });
+  const [notice, contextHolder] = useNotification({ duration: null, ...config });
+  const open = React.useCallback(({ __key__ = String(Date.now()), content, ...m }) => {
+    staticState.keyMap.set(__key__, __key__);
+    staticState.__currentKey = __key__;
+    notice.open({
+      content: <React.Fragment>{content}</React.Fragment>,
+      ...m,
+    });
+  }, []);
+  const destroy = React.useCallback(() => {
+    notice.destroy();
+    staticState.keyMap.clear();
+    staticState.__currentKey = null;
+  }, []);
+  const close = React.useCallback((__key__) => {
+    let key = staticState.__currentKey;
+    if (__key__) key = __key__;
+    staticState.keyMap.delete(key);
+    notice.close(key);
+    staticState.__currentKey = null;
+  }, []);
+
+  return [{ open, destroy, close }, contextHolder];
 };
