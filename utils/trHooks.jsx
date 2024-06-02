@@ -2,8 +2,6 @@ import { useThrottleFn } from 'ahooks';
 import React from 'react';
 import emitter from './events';
 import { useNotification } from 'rc-notification';
-import { useModel } from '@umijs/max';
-import { isMain } from './utils';
 
 export function useResize(cb, time = 500) {
   const isMounted = React.useRef(false);
@@ -102,10 +100,4 @@ export const TRNotification = (config = {}) => {
   }, []);
 
   return [{ open, destroy, close }, contextHolder];
-};
-
-// 获取全局model
-export const useGlobalModel = () => {
-  if (isMain()) return useModel('global');
-  return useModel('@@initialState');
 };
