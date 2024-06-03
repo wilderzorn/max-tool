@@ -1,4 +1,4 @@
-import { Spin } from 'antd'
+import { Spin } from 'antd';
 const PageLoading = () => {
   return (
     <div
@@ -6,11 +6,11 @@ const PageLoading = () => {
         paddingTop: 100,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <Spin />
     </div>
-  )
-}
-export default PageLoading
+  );
+};
+export default PageLoading;
