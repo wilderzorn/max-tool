@@ -8,7 +8,7 @@ const request = {
   baseURL: '/api',
   // 请求头
   errorConfig: {
-    errorThrower: (res) => {
+    errorThrower: (res: any) => {
       const { success, data, errorCode, errorMessage, showType } = res;
       if (!success) {
         const error: any = new Error(errorMessage);
