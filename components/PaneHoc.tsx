@@ -17,9 +17,13 @@ type PaneHocProps = {
   setState: (state: any) => void;
 };
 
-function PaneHoc<T extends object>(WrappedComponent: ComponentType<T>, defaultState = {}) {
+function PaneHoc<T extends object>(
+  WrappedComponent: ComponentType<T>,
+  defaultState = {},
+  defaultStaticState = {},
+) {
   const EnhancedComponent: React.FC<Omit<T, keyof PaneHocProps>> = (props) => {
-    const hocStaticState = useStaticState({});
+    const hocStaticState = useStaticState({ ...defaultStaticState });
     const [hocState, setHocState] = useTRState({ ...defaultState });
     return (
       <WrappedComponent

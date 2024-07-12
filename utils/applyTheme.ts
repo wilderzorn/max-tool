@@ -1,7 +1,9 @@
 /**
- * 全局antd组件配置
+ * @description: 全局antd组件配置
+ * @param {any}
+ * @return {*}
  */
-export default function ({ colorPrimary }) {
+export default function ({ colorPrimary }: any = {}): any {
   return {
     token: {
       borderRadius: 5,
@@ -24,6 +26,20 @@ export default function ({ colorPrimary }) {
       },
       Checkbox: {
         colorBgContainer: 'transparent',
+      },
+      Pagination: {
+        colorBgContainer: 'transparent',
+      },
+      Button: {
+        colorBgContainer: 'transparent',
+      },
+      Drawer: {
+        padding: 8,
+        paddingLG: 12,
+      },
+      Divider: {
+        margin: 8,
+        marginLG: 12,
       },
     },
   };

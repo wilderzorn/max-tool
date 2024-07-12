@@ -1,6 +1,6 @@
-import React from 'react';
-import { Empty } from 'antd';
 import { useStaticState } from '#/utils/trHooks';
+import { Empty } from 'antd';
+import React from 'react';
 import dartEmpty from '../../assets/empty.svg';
 
 const PageEmpty = (props = {}) => {

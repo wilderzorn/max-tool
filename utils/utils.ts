@@ -18,6 +18,18 @@ export function s12(): string {
 export function s16(): string {
   return s8() + s8();
 }
+/**
+ * @description: 异步等待
+ * @param {number} time
+ * @return {Promise<boolean>}
+ */
+export const waitTime = (time: number = 100): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
 
 export default {
   isMain,
@@ -25,4 +37,5 @@ export default {
   s8,
   s12,
   s16,
+  waitTime,
 };

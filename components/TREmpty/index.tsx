@@ -1,7 +1,8 @@
 import { Empty } from 'antd';
-import styles from './index.less';
-import { DEFAULT_MSG } from './helper';
+import React from 'react';
 import emptyImg from '../../assets/empty.svg';
+import { DEFAULT_MSG } from './helper';
+import styles from './index.less';
 
 const TREmpty = ({ type = 'empty', message = '', size = null }) => {
   const defaultMsg = message || DEFAULT_MSG[type];
