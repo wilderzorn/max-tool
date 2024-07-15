@@ -26,7 +26,8 @@ const useMessage = (): [MessageFunctions, React.ReactElement] => {
   };
 
   const createMessageFunction = (type: MessageType): MessageFunction => {
-    return (content, duration, onClose) => callMessage(type, content, duration, onClose);
+    return (content, duration, onClose) =>
+      callMessage(type, content, duration, onClose);
   };
 
   const messageFunctions: MessageFunctions = {

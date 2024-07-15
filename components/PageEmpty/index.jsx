@@ -4,7 +4,12 @@ import React from 'react';
 import dartEmpty from '../../assets/empty.svg';
 
 const PageEmpty = (props = {}) => {
-  const { description = '暂无数据', image, imageStyle = {}, style = {} } = props;
+  const {
+    description = '暂无数据',
+    image,
+    imageStyle = {},
+    style = {},
+  } = props;
   const staticState = useStaticState({
     defaultImg: dartEmpty,
     height: 80,

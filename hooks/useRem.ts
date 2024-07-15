@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 let timer: NodeJS.Timeout | null = null;
 
 function useRem(uiSize: number): number {
-  const [remSize, setRemSize] = useState<number>(Math.floor((window.innerWidth * 100) / uiSize));
+  const [remSize, setRemSize] = useState<number>(
+    Math.floor((window.innerWidth * 100) / uiSize),
+  );
 
   useEffect(() => {
     setFontSize();

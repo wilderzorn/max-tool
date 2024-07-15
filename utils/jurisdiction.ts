@@ -29,12 +29,17 @@ class Jurisdiction {
 
   // 根据路径名获取菜单代码
   getMenuCode(pathname: string = ''): string {
-    return this.PERMISSION_ARRAY.find((n) => pathname === `/${n.component}`)?.menuCode || '';
+    return (
+      this.PERMISSION_ARRAY.find((n) => pathname === `/${n.component}`)
+        ?.menuCode || ''
+    );
   }
 
   // 根据菜单代码获取菜单名称
   getMenuNameByCode(menuCode: string = ''): string {
-    return this.PERMISSION_ARRAY.find((n) => menuCode === n.menuCode)?.menuName || '';
+    return (
+      this.PERMISSION_ARRAY.find((n) => menuCode === n.menuCode)?.menuName || ''
+    );
   }
 
   // 保存反馈列表

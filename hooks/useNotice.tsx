@@ -11,7 +11,10 @@ interface ContentProps {
 }
 
 interface UseNoticeReturn {
-  show: (Content: ComponentType<ContentProps>, props?: Record<string, any>) => Promise<any>;
+  show: (
+    Content: ComponentType<ContentProps>,
+    props?: Record<string, any>,
+  ) => Promise<any>;
 }
 
 const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
@@ -23,7 +26,9 @@ const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
   ): Promise<any> => {
     const __key = s8();
     return new Promise<any>((resolve) => {
-      const onPress = async (data: Record<string, any> = { index: AlertResult.CANCEL }) => {
+      const onPress = async (
+        data: Record<string, any> = { index: AlertResult.CANCEL },
+      ) => {
         resolve(data);
         await abortableDelay(300);
         notice.close(__key);

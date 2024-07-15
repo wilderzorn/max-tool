@@ -55,7 +55,10 @@ export function useStaticState<T>(initValue: T): any {
  * @param reduce 一个可选的reduce函数，用于自定义状态更新逻辑，默认不提供。
  * @returns {any} 返回一个数组，第一个元素是当前的状态，第二个元素是一个用于更新状态的函数。
  */
-export const useTRState = (initValue: Record<string, any> = {}, reduce?: any): [any, any] => {
+export const useTRState = (
+  initValue: Record<string, any> = {},
+  reduce?: any,
+): [any, any] => {
   const reduceHandle = React.useCallback((data: any, action: any) => {
     if (action.type === 'changeData') {
       return { ...data, ...action.data };
