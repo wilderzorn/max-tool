@@ -11,25 +11,34 @@ interface ContentProps {
 }
 
 interface UseNoticeReturn {
-  show: (
+  open: <T = any>(
     Content: ComponentType<ContentProps>,
     props?: Record<string, any>,
-  ) => Promise<any>;
+  ) => Promise<T>;
 }
-
+/**
+ * 自定义钩子 `useNotice`，用于管理通知组件的显示和关闭。
+ * @returns 包含打开通知的函数和通知上下文的数组。
+ */
 const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
   const [notice, NoticeContext] = useNotification({ duration: 0 });
-
-  const show = (
+  /**
+   * 打开通知。
+   * @template T - 通知关闭时解析的 Promise 的类型。
+   * @param Content - 要显示的内容组件。
+   * @param props - 可选的内容组件属性。
+   * @returns 一个 Promise，该 Promise 在通知关闭时解析。
+   */
+  function open<T = any>(
     Content: ComponentType<ContentProps>,
-    props: Record<string, any> = {},
-  ): Promise<any> => {
+    props: Partial<ContentProps> = {},
+  ): Promise<T> {
     const __key = s8();
-    return new Promise<any>((resolve) => {
+    return new Promise<T>((resolve) => {
       const onPress = async (
         data: Record<string, any> = { index: AlertResult.CANCEL },
       ) => {
-        resolve(data);
+        resolve(data as T);
         await abortableDelay(300);
         notice.close(__key);
         notice.destroy();
@@ -39,9 +48,9 @@ const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
         key: __key,
       });
     });
-  };
+  }
 
-  return [{ show }, NoticeContext];
+  return [{ open }, NoticeContext];
 };
 
 export default useNotice;

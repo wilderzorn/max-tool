@@ -31,6 +31,14 @@ export const waitTime = (time: number = 100): Promise<boolean> => {
   });
 };
 
+/**
+ * @description: 是否是开发环境
+ * @return {boolean}
+ */
+export const isDevelopment = (): boolean => {
+  return process?.env?.NODE_ENV === 'development';
+};
+
 export default {
   isMain,
   s4,
@@ -38,4 +46,5 @@ export default {
   s12,
   s16,
   waitTime,
+  isDevelopment,
 };

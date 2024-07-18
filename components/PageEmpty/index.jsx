@@ -9,6 +9,7 @@ const PageEmpty = (props = {}) => {
     image,
     imageStyle = {},
     style = {},
+    className,
   } = props;
   const staticState = useStaticState({
     defaultImg: dartEmpty,
@@ -17,6 +18,7 @@ const PageEmpty = (props = {}) => {
 
   return (
     <Empty
+      className={className}
       image={image || staticState.defaultImg}
       imageStyle={{
         height: staticState.height,
