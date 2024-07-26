@@ -1,4 +1,4 @@
-import { useStaticState } from '#/utils/trHooks';
+import { useStaticState } from '#/hooks/trHooks';
 import { Empty } from 'antd';
 import React from 'react';
 import dartEmpty from '../../assets/empty.svg';

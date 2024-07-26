@@ -1,6 +1,6 @@
 import { useThrottleFn } from 'ahooks';
 import React from 'react';
-import emitter from './emitter.js';
+import emitter from '../utils/emitter';
 
 export function useResize(cb: () => void, time = 500): void {
   const isMounted = React.useRef(false);
@@ -26,7 +26,7 @@ export function useResize(cb: () => void, time = 500): void {
 
 /**
  *  *******************  用法  *********************
- *  import {useStaticState} from '#/utils/trHooks'; //导入方法
+ *  import {useStaticState} from '#/hooks/trHooks'; //导入方法
  *    const staticState = useStaticState({
  *     'name':'小明'
  *   });
@@ -40,7 +40,7 @@ export function useResize(cb: () => void, time = 500): void {
  * @param initValue  任意类型初始化数据
  * @returns {any}  返回任何类型数据对象
  */
-export function useStaticState<T>(initValue: T): any {
+export function useStaticState<T>(initValue: T): T | any {
   const formRef = React.useRef<T | null>(null);
   if (!formRef.current) {
     formRef.current = initValue;
