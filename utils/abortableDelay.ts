@@ -66,11 +66,7 @@ export default function abortableDelay(
     }
 
     // 设置超时
-    const timeoutId = setTimeout(() => {
-      // 在延迟完成时移除中止事件监听器
-      signal?.removeEventListener('abort', abortHandler);
-      resolve();
-    }, ms);
+    const timeoutId = setTimeout(resolve, ms);
 
     // 添加中止事件监听器
     signal?.addEventListener('abort', abortHandler, { once: true });

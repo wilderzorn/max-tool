@@ -12,10 +12,10 @@ export function useResize(cb: () => void, time = 500): void {
   );
   React.useEffect(() => {
     window.addEventListener('resize', run);
-    emitter.addListener('__onChangeMnue__', run);
+    emitter.on('__onChangeMnue__', run);
     return () => {
       window.removeEventListener('resize', run);
-      emitter.removeListener('__onChangeMnue__', run);
+      emitter.off('__onChangeMnue__', run);
     };
   }, []);
   React.useEffect(() => {

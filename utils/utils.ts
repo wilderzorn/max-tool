@@ -39,6 +39,22 @@ export const isDevelopment = (): boolean => {
   return process?.env?.NODE_ENV === 'development';
 };
 
+export function isEmpty(x: unknown): boolean {
+  if (x === null || x === false || (typeof x === 'number' && isNaN(x))) {
+    return true;
+  }
+  if (typeof x === 'string' && x.trim() === '') {
+    return true;
+  }
+  if (Array.isArray(x) && x.length === 0) {
+    return true;
+  }
+  if (typeof x === 'object' && x !== null && Object.keys(x).length === 0) {
+    return true;
+  }
+  return false;
+}
+
 export default {
   isMain,
   s4,
@@ -47,4 +63,5 @@ export default {
   s16,
   waitTime,
   isDevelopment,
+  isEmpty,
 };
