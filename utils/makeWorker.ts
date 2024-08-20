@@ -23,19 +23,23 @@
  * 4. 返回创建的 Web Worker 实例，主线程可以使用该实例与 Worker 进行通信（发送数据和接收结果）。
  */
 function makeWorker<T = any, R = any>(workerFunction: (input: T) => R): Worker {
-  // 将函数转换为字符串，并生成一个 Blob 对象
-  const blob = new Blob(
-    [
-      `onmessage = function(event) {
+  try {
+    // 将函数转换为字符串，并生成一个 Blob 对象
+    const blob = new Blob(
+      [
+        `onmessage = function(event) {
         const result = (${workerFunction.toString()})(event.data);
         postMessage(result);
       }`,
-    ],
-    { type: 'application/javascript' },
-  );
-  // 使用 Blob 创建一个 URL 对象
-  const worker = new Worker(URL.createObjectURL(blob));
-  return worker;
+      ],
+      { type: 'application/javascript' },
+    );
+    // 使用 Blob 创建一个 URL 对象
+    const worker = new Worker(URL.createObjectURL(blob));
+    return worker;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export default makeWorker;
