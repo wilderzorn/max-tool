@@ -1,6 +1,5 @@
 import { useStaticState } from '#/hooks/trHooks';
 import { Empty } from 'antd';
-import React from 'react';
 import dartEmpty from '../../assets/empty.svg';
 
 const PageEmpty = (props = {}) => {
@@ -20,10 +19,12 @@ const PageEmpty = (props = {}) => {
     <Empty
       className={className}
       image={image || staticState.defaultImg}
-      imageStyle={{
-        height: staticState.height,
-        margin: '8px 0',
-        ...imageStyle,
+      styles={{
+        image: {
+          height: staticState.height,
+          margin: '8px 0',
+          ...imageStyle,
+        },
       }}
       style={style}
       description={description ?? '暂无数据'}
