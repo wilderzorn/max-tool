@@ -1,35 +1,38 @@
 import { Spin } from 'antd';
 import { s8 } from '../utils/utils';
 import { useRef } from 'react';
-import { useNotification, NotificationAPI } from 'rc-notification';
+import { useNotification } from 'rc-notification';
 import type { FC, CSSProperties } from 'react';
+import { styled } from '@umijs/max';
 
 interface LoadingOverlayProps {
   tip?: string;
   styles?: CSSProperties;
 }
 
-const LoadingOverlay: FC<LoadingOverlayProps> = ({
-  tip = 'Loading...',
-  styles,
-}) => (
+const TRSpan = styled.span`
+  color: var(--font);
+`;
+
+const LoadingOverlay: FC<LoadingOverlayProps> = ({ tip = '', styles }) => (
   <div
     style={{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'column',
+      rowGap: '10px',
       position: 'absolute',
       top: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: '#00000052',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       zIndex: 100,
       ...styles,
     }}
   >
     <Spin />
-    <span>{tip}</span>
+    <TRSpan>{tip}</TRSpan>
   </div>
 );
 
