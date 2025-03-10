@@ -48,27 +48,38 @@ export default function abortableDelay(
   ms: number = 100,
   { signal }: DelayOptions = {},
 ): Promise<void> {
+  // 参数校验
+  if (typeof ms !== 'number' || ms < 0) {
+    throw new TypeError('延迟时间必须为非负数');
+  }
   return new Promise((resolve, reject) => {
-    // 定义中止错误函数
-    const abortError = () => {
+    // 提前处理已中止的信号
+    if (signal?.aborted) {
+      reject(new AbortError());
+      return;
+    }
+
+    // 统一清理函数
+    const cleanup = () => {
+      clearTimeout(timerId);
+      signal?.removeEventListener('abort', abortHandler);
+    };
+
+    // 中止处理器
+    const abortHandler = () => {
+      cleanup();
       reject(new AbortError());
     };
 
-    // 定义中止处理程序
-    const abortHandler = () => {
-      clearTimeout(timeoutId);
-      abortError();
+    // 定时器回调
+    const done = () => {
+      cleanup();
+      resolve();
     };
 
-    // 检查信号是否已经中止
-    if (signal?.aborted) {
-      return abortError();
-    }
+    const timerId = setTimeout(done, ms);
 
-    // 设置超时
-    const timeoutId = setTimeout(resolve, ms);
-
-    // 添加中止事件监听器
+    // 注册中止监听（确保单次执行）
     signal?.addEventListener('abort', abortHandler, { once: true });
   });
 }

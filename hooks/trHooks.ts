@@ -2,26 +2,24 @@ import { useThrottleFn } from 'ahooks';
 import React from 'react';
 import emitter from '../utils/emitter';
 
-export function useResize(cb: () => void, time = 500): void {
-  const isMounted = React.useRef(false);
-  const { run } = useThrottleFn(
-    () => {
-      cb?.();
-    },
-    { wait: time, leading: false },
-  );
+type ResizeCallback = () => void;
+
+export function useResize(cb: ResizeCallback, throttleTime = 500): void {
+  const throttledRun = useThrottleFn(() => cb?.(), {
+    wait: throttleTime,
+    leading: false,
+  });
   React.useEffect(() => {
-    window.addEventListener('resize', run);
-    emitter.on('__onChangeMnue__', run);
+    const handleResize = throttledRun.run;
+    window.addEventListener('resize', handleResize);
+    emitter.on('__onChangeMenu__', handleResize);
+    // 立即触发一次初始化回调
+    cb?.();
     return () => {
-      window.removeEventListener('resize', run);
-      emitter.off('__onChangeMnue__', run);
+      window.removeEventListener('resize', handleResize);
+      emitter.off('__onChangeMenu__', handleResize);
     };
-  }, []);
-  React.useEffect(() => {
-    /* 第一次挂载 */
-    isMounted.current = true;
-  }, []);
+  }, [throttledRun.run, cb]); // 明确依赖项
 }
 
 /**
@@ -55,24 +53,42 @@ export function useStaticState<T>(initValue: T): T | any {
  * @param reduce 一个可选的reduce函数，用于自定义状态更新逻辑，默认不提供。
  * @returns {any} 返回一个数组，第一个元素是当前的状态，第二个元素是一个用于更新状态的函数。
  */
-export const useTRState = (
-  initValue: Record<string, any> = {},
-  reduce?: any,
-): [any, any] => {
-  const reduceHandle = React.useCallback((data: any, action: any) => {
+
+type TRStateAction<T extends Record<string, any>> =
+  | { type: 'changeData'; data: Partial<T> }
+  | { type: string; [key: string]: any };
+
+export function useTRState<T extends Record<string, any>>(
+  initValue: T,
+  customReducer?: (state: T, action: TRStateAction<T>) => T,
+): [T, (data: Partial<T> | ((prev: T) => Partial<T>)) => void] {
+  const defaultReducer = (state: T, action: TRStateAction<T>): T => {
     if (action.type === 'changeData') {
-      return { ...data, ...action.data };
+      return {
+        ...state,
+        ...(typeof action.data === 'function'
+          ? action.data(state)
+          : action.data),
+      };
     }
-    reduce?.(data, action);
-  }, []);
-  const [state, dispatch] = React.useReducer(reduceHandle, {
+    return customReducer?.(state, action) ?? state;
+  };
+
+  const [state, dispatch] = React.useReducer(defaultReducer, {
     isLoading: false,
     errorMsg: '',
     ...initValue,
   });
 
-  const setState = React.useCallback((m: any, type = 'changeData') => {
-    dispatch({ type: type, data: m });
-  }, []);
+  const setState = React.useCallback(
+    (data: Partial<T> | ((prev: T) => Partial<T>)) => {
+      dispatch({
+        type: 'changeData',
+        data: typeof data === 'function' ? data(state) : data,
+      });
+    },
+    [state],
+  );
+
   return [state, setState];
-};
+}
