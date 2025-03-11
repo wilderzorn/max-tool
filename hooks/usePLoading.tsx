@@ -14,7 +14,7 @@ const TRSpan = styled.span`
   color: var(--font);
 `;
 
-const LoadingOverlay: FC<LoadingOverlayProps> = ({ tip = '', styles }) => (
+const LoadingOverlay: FC<LoadingOverlayProps> = ({ tip = '', styles = {} }) => (
   <div
     style={{
       display: 'flex',
@@ -36,13 +36,8 @@ const LoadingOverlay: FC<LoadingOverlayProps> = ({ tip = '', styles }) => (
   </div>
 );
 
-interface OpenParams {
-  tip?: string;
-  styles?: CSSProperties;
-}
-
 interface UsePLoadingReturn {
-  showLoading: (params?: OpenParams) => void;
+  showLoading: (tip?: string, styles?: CSSProperties) => void;
   hideLoading: () => void;
 }
 
@@ -50,9 +45,8 @@ export const usePLoading = (): [UsePLoadingReturn, React.ReactElement] => {
   const [notice, LoadingProvider] = useNotification();
   const currentKeyRef = useRef<{ __key__: string | null }>({ __key__: null });
 
-  const showLoading = (params: OpenParams = {}) => {
+  const showLoading = (tip?: string, styles?: CSSProperties) => {
     if (currentKeyRef.current.__key__) return;
-    const { tip = '', styles = {} } = params;
     const __key__ = s8();
     currentKeyRef.current.__key__ = __key__;
     notice.open({

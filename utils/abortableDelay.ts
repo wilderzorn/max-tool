@@ -1,3 +1,4 @@
+import AbortError from '../error/AbortError';
 /**
  * 创建一个在指定延迟后解析的 Promise。
  * 可以使用 AbortSignal 中止延迟。
@@ -34,12 +35,6 @@
  *   controller.abort();
  * }, 2000);
  */
-class AbortError extends Error {
-  constructor(message = '行动被中止') {
-    super(message);
-    this.name = 'AbortError';
-  }
-}
 interface DelayOptions {
   signal?: AbortSignal;
 }
