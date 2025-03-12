@@ -13,27 +13,25 @@ interface LoadingOverlayProps {
 const TRSpan = styled.span`
   color: var(--font);
 `;
+const TRDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-mask);
+  z-index: 100;
+  padding-top: 20%;
+`;
 
 const LoadingOverlay: FC<LoadingOverlayProps> = ({ tip = '', styles = {} }) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      rowGap: '10px',
-      position: 'absolute',
-      top: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      zIndex: 100,
-      ...styles,
-    }}
-  >
+  <TRDiv style={styles}>
     <Spin />
     <TRSpan>{tip}</TRSpan>
-  </div>
+  </TRDiv>
 );
 
 interface UsePLoadingReturn {
