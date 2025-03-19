@@ -84,10 +84,13 @@ export function useTRState<T extends Record<string, any>>(
     (data: Partial<T> | ((prev: T) => Partial<T>)) => {
       dispatch({
         type: 'changeData',
-        data: typeof data === 'function' ? data(state) : data,
+        data: (current: T) => ({
+          ...current,
+          ...(typeof data === 'function' ? data(current) : data),
+        }),
       });
     },
-    [state],
+    [],
   );
 
   return [state, setState];
