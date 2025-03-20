@@ -39,6 +39,7 @@ interface StaticState {
  *   const [state, setState] = useTRState({
  *     data: Array(10000).fill(null),
  *     processed: 0,
+ *     shouldRun: false
  *   });
  *
  *   const tasks = useMemo(() => data.map((_, i) => () => {
@@ -46,9 +47,28 @@ interface StaticState {
  *     setState((prev) => ({ ...prev, processed: prev.processed + 1 })); // 使用函数式更新
  *   }), [data]);
  *
- *   useIdleTask(tasks);
+ *   useIdleTask(state.shouldRun ? tasks : []);
  *
- *   return <div>Processed: {state.processed}/{state.data.length}</div>;
+ *   return (
+ *      <div className={styles.container}>
+ *        <Button onClick={() => setState({ shouldRun: true })}>
+ *          开始后台处理
+ *        </Button>
+ *        <Button onClick={() => {
+ *          setState(() => ({ shouldRun: false, processed: 0 }));
+ *          }}
+ *        >
+ *          重置
+ *        </Button>
+ *        <div>
+ *          <h3>数据处理进度</h3>
+ *          <progress value={state.processed} max={state.data.length} />
+ *          <div>
+ *            {state.processed}/{state.data.length} processed
+ *          </div>
+ *        </div>
+ *      </div>
+ *   );
  * }
  * ```
  *

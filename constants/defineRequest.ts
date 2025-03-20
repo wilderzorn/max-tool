@@ -1,6 +1,6 @@
 import { history } from '@umijs/max';
 import { message } from 'antd';
-import { getAuthorization, setAuthorization } from './authority';
+import { getAuthorization, setAuthorization } from '../utils/authority';
 
 const request = {
   // 超时时间
