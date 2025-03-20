@@ -2,7 +2,7 @@ import { useNotification } from 'rc-notification';
 import type { ComponentType } from 'react';
 import React from 'react';
 import abortableDelay from '../utils/abortableDelay';
-import { AlertResult } from '../utils/contacts';
+import { AlertResult } from '../resource/contacts';
 import { s8 } from '../utils/utils';
 
 interface ContentProps {

@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import type React from 'react';
 import type { ReactNode } from 'react';
-import { AlertResult } from '../utils/contacts';
+import { AlertResult } from '../resource/contacts';
 
 type Title = string | ReactNode;
 type Content = string | ReactNode | undefined;
