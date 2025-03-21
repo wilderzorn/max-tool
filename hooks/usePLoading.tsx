@@ -23,7 +23,7 @@ const TRDiv = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: var(--bg-mask);
-  z-index: 100;
+  z-index: 99;
   padding-top: 20%;
 `;
 
