@@ -32,55 +32,61 @@ interface Config {
  * @param {number} config.minScale - 最小缩放比例
  * @param {number} config.transitionDuration - 缩放动画时长(秒)
  */
-export default React.memo((props: SProps) => {
-  const { children, className = '', style = {}, config = {} } = props;
+export default React.memo(
+  React.forwardRef((props: SProps, ref) => {
+    const { children, className = '', style = {}, config = {} } = props;
 
-  const { uiWidth = 1920, minScale = 0.1, transitionDuration = 0.3 } = config;
+    const { uiWidth = 1920, minScale = 0.1, transitionDuration = 0.3 } = config;
 
-  const pageRef = React.useRef<HTMLDivElement | any>();
+    const pageRef = React.useRef<HTMLDivElement | any>();
 
-  const size: Size = useSize(pageRef);
+    const size: Size = useSize(pageRef);
 
-  const [state, setState] = useTRState({
-    pageScale: 1,
-    pageHeight: 0,
-  });
-
-  const updateScale = React.useCallback(() => {
-    if (!size || size.width <= 0 || size.height <= 0) return;
-    const calculatedScale = Math.max(size.width / uiWidth, minScale);
-    const pageHeight = Math.max(size.height / calculatedScale, 0);
-    setState((prev) => {
-      const scaleChanged = Math.abs(prev.pageScale - calculatedScale) > 0.01;
-      const heightChanged = Math.abs(prev.pageHeight - pageHeight) > 1;
-      return scaleChanged || heightChanged
-        ? { pageScale: calculatedScale, pageHeight }
-        : prev;
+    const [state, setState] = useTRState({
+      pageScale: 1,
+      pageHeight: 0,
     });
-  }, [size, uiWidth, minScale]);
 
-  React.useEffect(() => {
-    const handle = requestAnimationFrame(updateScale);
-    return () => cancelAnimationFrame(handle);
-  }, [updateScale]);
+    React.useImperativeHandle(ref, () => {
+      return { pageScale: state.pageScale };
+    });
 
-  return (
-    <div
-      ref={pageRef}
-      className={`${styles.content} ${className}`}
-      style={style}
-    >
+    const updateScale = React.useCallback(() => {
+      if (!size || size.width <= 0 || size.height <= 0) return;
+      const calculatedScale = Math.max(size.width / uiWidth, minScale);
+      const pageHeight = Math.max(size.height / calculatedScale, 0);
+      setState((prev) => {
+        const scaleChanged = Math.abs(prev.pageScale - calculatedScale) > 0.01;
+        const heightChanged = Math.abs(prev.pageHeight - pageHeight) > 1;
+        return scaleChanged || heightChanged
+          ? { pageScale: calculatedScale, pageHeight }
+          : prev;
+      });
+    }, [size, uiWidth, minScale]);
+
+    React.useEffect(() => {
+      const handle = requestAnimationFrame(updateScale);
+      return () => cancelAnimationFrame(handle);
+    }, [updateScale]);
+
+    return (
       <div
-        className={styles.wrapper}
-        style={{
-          transform: `scale(${state.pageScale})`,
-          transition: `transform ${transitionDuration}s`,
-          width: uiWidth,
-          height: state.pageHeight,
-        }}
+        ref={pageRef}
+        className={`${styles.content} ${className}`}
+        style={style}
       >
-        {children}
+        <div
+          className={styles.wrapper}
+          style={{
+            transform: `scale(${state.pageScale})`,
+            transition: `transform ${transitionDuration}s`,
+            width: uiWidth,
+            height: state.pageHeight,
+          }}
+        >
+          {children}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }),
+);
