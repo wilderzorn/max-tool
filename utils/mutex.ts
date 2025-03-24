@@ -35,7 +35,7 @@
 export class Mutex {
   private capacity: number;
   private available: number;
-  private deferredTasks: Array<() => void> = [];
+  private deferredTasks: (() => void)[] = [];
 
   constructor(capacity: number = 1) {
     if (capacity < 1) {

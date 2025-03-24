@@ -83,7 +83,7 @@ interface StaticState {
  * - 任务函数中的错误会被静默吞没，建议自行添加 try/catch
  * - 长时间阻塞可能导致任务中断，需做好状态持久化
  */
-function useIdleTask(tasks: ReadonlyArray<TaskFunction>): void {
+function useIdleTask(tasks: readonly TaskFunction[]): void {
   const staticState = useStaticState<StaticState>({
     index: 0,
     cleanup: null,

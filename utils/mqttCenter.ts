@@ -1,4 +1,5 @@
-import mqtt, { MqttClient, IClientOptions, ISubscriptionMap } from 'mqtt';
+import type { MqttClient, IClientOptions, ISubscriptionMap } from 'mqtt';
+import mqtt from 'mqtt';
 import _ from 'lodash';
 import { mqttUrl } from '../../../config/urlConfig';
 import { s16 } from './utils';
