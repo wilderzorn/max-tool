@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTRState } from '../../hooks/trHooks';
-import { useSize } from 'ahooks';
+import { useFullscreen, useSize } from 'ahooks';
 import styles from './index.less';
 
 type Size = { width: number; height: number } | undefined;
@@ -35,20 +35,25 @@ interface Config {
 export default React.memo(
   React.forwardRef((props: SProps, ref) => {
     const { children, className = '', style = {}, config = {} } = props;
-
     const { uiWidth = 1920, minScale = 0.1, transitionDuration = 0.3 } = config;
-
     const pageRef = React.useRef<HTMLDivElement | any>();
-
+    const [isFullscreen, { enterFullscreen, exitFullscreen }] =
+      useFullscreen(pageRef);
     const size: Size = useSize(pageRef);
-
+    const toggleFullscreen = () => {
+      isFullscreen ? exitFullscreen() : enterFullscreen();
+    };
     const [state, setState] = useTRState({
       pageScale: 1,
       pageHeight: 0,
     });
 
     React.useImperativeHandle(ref, () => {
-      return { pageScale: state.pageScale };
+      return {
+        pageScale: state.pageScale,
+        toggleFullscreen,
+        isFullscreen,
+      };
     });
 
     const updateScale = React.useCallback(() => {
