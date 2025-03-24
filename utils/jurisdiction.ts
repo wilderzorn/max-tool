@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { unionWith, isEqual } from 'es-toolkit';
 
 // 定义权限项的类型
 interface Permission {
@@ -24,7 +24,7 @@ class Jurisdiction {
 
   // 保存权限列表
   save(list: Permission[] = []): void {
-    this.PERMISSION_ARRAY = _.unionWith(list, this.PERMISSION_ARRAY, _.isEqual);
+    this.PERMISSION_ARRAY = unionWith(list, this.PERMISSION_ARRAY, isEqual);
   }
 
   // 根据路径名获取菜单代码

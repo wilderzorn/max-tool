@@ -1,8 +1,8 @@
 import type { MqttClient, IClientOptions, ISubscriptionMap } from 'mqtt';
 import mqtt from 'mqtt';
-import _ from 'lodash';
 import { mqttUrl } from '../../../config/urlConfig';
 import { s16 } from './utils';
+import { last } from 'es-toolkit';
 
 type EventCallback = (data: any, key: string, lastTopicPart: string) => void;
 type ReconnectCallback = (m: string) => void;
@@ -78,7 +78,7 @@ class MqttCenter {
       const res = JSON.parse(decodeURIComponent(encodeURIComponent(msg)));
       this.events.forEach((value, key) => {
         const topics = Array.isArray(value.topic) ? value.topic : [value.topic];
-        const lastTopicPart = _.last(topic.split('/')) || '';
+        const lastTopicPart = last(topic.split('/')) || '';
         if (value.topic.includes('#') && topic.includes(value.topicWildcard)) {
           value.func?.(res, key, lastTopicPart);
         } else if (topics.includes(topic)) {
