@@ -7,13 +7,13 @@ import { s8 } from '../utils/utils';
 
 interface ContentProps {
   onPress: (data?: Record<string, any>) => void;
-  [key: string]: any;
+  [key: string]: any; // 保留索引签名允许任意额外属性
 }
 
 interface UseNoticeReturn {
-  open: <T = any>(
-    Content: ComponentType<ContentProps>,
-    props?: Record<string, any>,
+  open: <T = any, P extends Record<string, any> = {}>(
+    Content: ComponentType<ContentProps & P>,
+    props?: Omit<P, 'onPress'>,
   ) => Promise<T>;
   close: (key: string) => void;
 }
@@ -31,11 +31,11 @@ const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
    * @param props - 可选的内容组件属性。
    * @returns 一个 Promise，该 Promise 在通知关闭时解析。
    */
-  function open<T = any>(
-    Content: ComponentType<ContentProps>,
-    props: Partial<ContentProps> = {},
+  function open<T = any, P extends Record<string, any> = {}>(
+    Content: ComponentType<ContentProps & P>,
+    props?: Omit<P, 'onPress'>,
   ): Promise<T> {
-    const __key__ = props?.__key__ ?? s8();
+    const __key__ = (props as any)?.__key__ ?? s8();
     return new Promise<T>((resolve) => {
       const onPress = async (
         data: Record<string, any> = { index: AlertResult.CANCEL },
@@ -45,7 +45,7 @@ const useNotice = (): [UseNoticeReturn, React.ReactElement] => {
         notice.close(__key__);
       };
       notice.open({
-        content: <Content onPress={onPress} {...props} />,
+        content: <Content onPress={onPress} {...((props as any) || {})} />,
         key: __key__,
         duration: 300,
       });

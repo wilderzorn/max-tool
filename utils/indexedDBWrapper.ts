@@ -187,6 +187,107 @@ class IndexedDBWrapper {
     await this.close();
     return this.connect();
   }
+  /**
+   * 根据主键获取数据
+   * @template T - 返回数据类型
+   * @param {string} storeName - 对象存储名称
+   * @param {IDBValidKey} key - 主键值
+   * @returns {Promise<T | undefined>} 查询结果
+   */
+  async getByKey<T>(
+    storeName: string,
+    key: IDBValidKey,
+  ): Promise<T | undefined> {
+    await this.ensureConnected();
+    return this._transaction<T | undefined>(storeName, 'readonly', (store) =>
+      store.get(key),
+    );
+  }
+
+  /**
+   * 根据索引查询数据
+   * @template T - 返回数据类型
+   * @param {string} storeName - 对象存储名称
+   * @param {string} indexName - 索引名称
+   * @param {IDBValidKey} value - 索引值
+   * @returns {Promise<T[]>} 查询结果数组
+   */
+  async getByIndex<T>(
+    storeName: string,
+    indexName: string,
+    value: IDBValidKey,
+  ): Promise<T[]> {
+    await this.ensureConnected();
+    return this._transaction<T[]>(storeName, 'readonly', (store) =>
+      store.index(indexName).getAll(value),
+    );
+  }
+
+  /**
+   * 获取对象存储所有数据
+   * @template T - 返回数据类型
+   * @param {string} storeName - 对象存储名称
+   * @returns {Promise<T[]>} 所有数据数组
+   */
+  async getAll<T>(storeName: string): Promise<T[]> {
+    await this.ensureConnected();
+    return this._transaction<T[]>(storeName, 'readonly', (store) =>
+      store.getAll(),
+    );
+  }
+
+  /**
+   * 根据主键删除数据
+   * @param {string} storeName - 对象存储名称
+   * @param {IDBValidKey} key - 主键值
+   * @returns {Promise<void>}
+   */
+  async deleteByKey(storeName: string, key: IDBValidKey): Promise<void> {
+    await this.ensureConnected();
+    return this._transaction(storeName, 'readwrite', (store) =>
+      store.delete(key),
+    );
+  }
+
+  /**
+   * 清空对象存储
+   * @param {string} storeName - 对象存储名称
+   * @returns {Promise<void>}
+   */
+  async clearStore(storeName: string): Promise<void> {
+    await this.ensureConnected();
+    return this._transaction(storeName, 'readwrite', (store) => store.clear());
+  }
+
+  /**
+   * 更新或插入数据到指定对象存储
+   * @template T - 数据类型
+   * @param {string} storeName - 对象存储名称
+   * @param {T} data - 要更新/插入的数据（必须包含keyPath字段）
+   * @returns {Promise<IDBValidKey>} 返回操作结果的键
+   * @throws {Error} 更新操作失败时抛出
+   */
+  async put<T>(storeName: string, data: T): Promise<IDBValidKey> {
+    await this.ensureConnected();
+    return this._transaction(storeName, 'readwrite', (store) => {
+      return store.put(data);
+    });
+  }
+
+  /**
+   * 安全更新/插入数据（自动处理存储不存在的情况）
+   * @template T - 数据类型
+   * @param {string} storeName - 对象存储名称
+   * @param {T} data - 要更新/插入的数据
+   * @returns {Promise<IDBValidKey>} 返回操作结果的键
+   * @throws {Error} 升级失败或操作失败时抛出
+   */
+  async safePut<T>(storeName: string, data: T): Promise<IDBValidKey> {
+    if (!(await this.containsStore(storeName))) {
+      await this._autoUpgrade();
+    }
+    return this.put(storeName, data);
+  }
 }
 
 export default IndexedDBWrapper;
