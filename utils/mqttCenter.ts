@@ -86,7 +86,6 @@ class MqttCenter {
         }
       });
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('Message processing error:', e);
     }
   }

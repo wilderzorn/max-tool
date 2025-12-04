@@ -74,11 +74,7 @@ export function useTRState<T extends Record<string, any>>(
     return customReducer?.(state, action) ?? state;
   };
 
-  const [state, dispatch] = React.useReducer(defaultReducer, {
-    isLoading: false,
-    errorMsg: '',
-    ...initValue,
-  });
+  const [state, dispatch] = React.useReducer(defaultReducer, initValue);
 
   const setState = React.useCallback(
     (data: Partial<T> | ((prev: T) => Partial<T>)) => {

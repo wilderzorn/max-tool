@@ -1,0 +1,42 @@
+.tr_default {
+  width: 100%;
+  height: 100%;
+  padding: 14% 0;
+  overflow: hidden;
+  &.is_small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    > div {
+      width: 100%;
+    }
+  }
+  &_desc {
+    color: var(--font-a60);
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+  }
+}
+
+.tr_default_img {
+  width: 100%;
+  margin-bottom: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto 100%;
+  &.empty {
+    background-image: url('../../assets/img_dark_empty.png');
+  }
+  &.error {
+    background-image: url('../../assets/img_dark_error.png');
+  }
+  &.lock {
+    background-image: url('../../assets/img_dark_lock.png');
+  }
+  &.emptysm {
+    background-image: url('../../assets/emptysm.svg');
+    transform: translateX(8px);
+  }
+}

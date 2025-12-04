@@ -113,7 +113,6 @@ function useIdleTask(tasks: readonly TaskFunction[]): void {
           try {
             tasks[staticState.index++]();
           } catch (error) {
-            // eslint-disable-next-line no-console
             console.error('Task execution failed:', error);
           }
         }

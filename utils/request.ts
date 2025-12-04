@@ -64,7 +64,6 @@ export default async function (
       // eslint-disable-next-line no-console
       console.log('Request was aborted');
     } else {
-      // eslint-disable-next-line no-console
       console.error('Request failed', error);
     }
   }

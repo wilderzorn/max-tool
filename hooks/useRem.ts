@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-let timer: NodeJS.Timeout | null = null;
+let timer: globalThis.NodeJS.Timeout | null = null;
 
 function useRem(uiSize: number): number {
   const [remSize, setRemSize] = useState<number>(

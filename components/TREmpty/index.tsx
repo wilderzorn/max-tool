@@ -1,5 +1,5 @@
 import { Empty } from 'antd';
-import emptyImg from '../../assets/empty.svg';
+import emptyImg from '../../assets/emptysm.svg';
 import { DEFAULT_MSG } from './helper';
 import styles from './index.less';
 
