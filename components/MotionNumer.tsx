@@ -10,6 +10,7 @@ interface MotionNumerProps {
   onClick?: () => void;
   duration?: number;
   floatLength?: number; // 控制小数点后的位数
+  style?: React.CSSProperties;
 }
 
 /**
@@ -27,15 +28,17 @@ const MotionNumer: React.FC<MotionNumerProps> = ({
   onClick = () => {},
   duration = 1000,
   floatLength = 0,
+  style = {},
 }) => {
   return (
     <TweenOne
       className={className}
+      style={style}
       onClick={onClick}
       animation={{
         Children: {
           value: Number(value) || 0,
-          floatLength: floatLength,
+          floatLength,
         },
         duration,
       }}
