@@ -6,13 +6,15 @@ import React, {
   useState,
 } from 'react';
 import styles from './index.less';
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
-import VMultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
-import VCellMeasurer from 'react-virtualized/dist/commonjs/CellMeasurer';
-import VCellMeasurerCache from 'react-virtualized/dist/commonjs/CellMeasurer/CellMeasurerCache';
+import {
+  AutoSizer,
+  MultiGrid,
+  CellMeasurer,
+  CellMeasurerCache,
+} from 'react-virtualized';
 import { Pagination, PaginationProps } from 'antd';
 import { TRDefault } from '#/components';
-import { useStaticState } from '#/hooks/trHooks';
+import { useStaticState } from '../../index';
 import { useSize } from 'ahooks';
 
 // 列定义类型
@@ -47,7 +49,7 @@ interface SortState {
 
 // 静态状态类型
 interface StaticState {
-  cache: VCellMeasurerCache;
+  cache: CellMeasurerCache;
   allRatio: number;
   allWidth: number;
   flexColumnsCount: number;
@@ -90,7 +92,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
   pagination = false,
   onChange,
 }: TRVirtualTableProps<T>) => {
-  const tableRef = useRef<VMultiGrid>(null);
+  const tableRef = useRef<MultiGrid>(null);
   const [resizeKey, setResizeKey] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const containerSize = useSize(containerRef);
@@ -111,7 +113,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
   const isPageSizeChanging = useRef(false);
 
   const staticState = useStaticState<StaticState>({
-    cache: new VCellMeasurerCache({
+    cache: new CellMeasurerCache({
       defaultHeight: 40,
       fixedHeight: true,
     }),
@@ -439,7 +441,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
     const isEvenRow = rowIndex % 2 === 0;
 
     return (
-      <VCellMeasurer
+      <CellMeasurer
         cache={staticState.cache}
         columnIndex={columnIndex}
         key={key}
@@ -471,7 +473,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
             ? onHeaderRender(columnIndex)
             : onContentRender(columnIndex, dataSlide, rowIndex - 1)}
         </div>
-      </VCellMeasurer>
+      </CellMeasurer>
     );
   };
 
@@ -624,7 +626,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
         ) : null}
         <AutoSizer>
           {({ width, height }) => (
-            <VMultiGrid
+            <MultiGrid
               ref={tableRef}
               style={{
                 overflowY: 'hidden',

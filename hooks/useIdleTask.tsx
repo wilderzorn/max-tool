@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useStaticState } from './trHooks';
+import useStaticState from './useStaticState';
 
 type TaskFunction = () => void;
 type CleanupFunction = (() => void) | null;

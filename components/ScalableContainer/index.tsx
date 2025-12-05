@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTRState } from '../../hooks/trHooks';
+import { useTRState } from '../../index';
 import { useFullscreen, useSize } from 'ahooks';
 import styles from './index.less';
 

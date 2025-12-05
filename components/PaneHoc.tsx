@@ -9,7 +9,7 @@
 
 import type { ComponentType } from 'react';
 import React from 'react';
-import { useStaticState, useTRState } from '../hooks/trHooks';
+import { useStaticState, useTRState } from '../index';
 
 type PaneHocProps = {
   staticState: any;

@@ -12,7 +12,7 @@ interface LoadingOverlayProps {
 }
 
 const TRSpan = styled.span`
-  color: var(--font);
+  color: var(--font-white);
 `;
 const TRDiv = styled.div`
   display: flex;

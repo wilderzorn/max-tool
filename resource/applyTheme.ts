@@ -1,5 +1,5 @@
 /**
- * @description: 全局antd组件配置
+ * @description: 定制主题全局antd组件配置 https://ant-design.antgroup.com/docs/react/customize-theme-cn
  * @param {any}
  * @return {*}
  */
