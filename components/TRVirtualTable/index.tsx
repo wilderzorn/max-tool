@@ -19,7 +19,7 @@ import { useSize } from 'ahooks';
 
 // 列定义类型
 export interface ColumnType<T = any> {
-  title: React.ReactNode;
+  title: React.ReactNode | ((column: ColumnType<T>) => React.ReactNode); // 允许函数类型
   dataIndex?: string;
   key?: string;
   width?: number;
@@ -28,7 +28,7 @@ export interface ColumnType<T = any> {
   fixed?: 'left' | 'right';
   sort?: boolean | ((a: T, b: T) => number); // 支持布尔值或自定义排序函数
   unit?: string;
-  render?: (record: T, rowIndex: number) => React.ReactNode;
+  render?: (text: T, record: T, rowIndex: number) => any;
 }
 
 // 分页配置类型
@@ -88,7 +88,7 @@ export interface TRVirtualTableProps<T = any> {
 const TRVirtualTable = <T extends Record<string, any>>({
   columns = [],
   dataList = [],
-  headerHeight = 60,
+  headerHeight = 35,
   pagination = false,
   onChange,
 }: TRVirtualTableProps<T>) => {
@@ -456,15 +456,14 @@ const TRVirtualTable = <T extends Record<string, any>>({
               : isEvenRow
               ? 'var(--bg-zebra)'
               : 'var(--bg-main)',
-            fontWeight: '400',
-            padding: isHeader ? '0' : '0 4px',
+            fontWeight: isHeader ? '600' : '400',
             whiteSpace: isHeader ? 'normal' : 'nowrap',
             display: 'flex',
             alignItems: 'center',
             justifyContent: isHeader ? 'center' : 'flex-start',
             border: '1px solid var(--bd)',
-            borderTop: 'none',
-            borderLeft: 'none',
+            borderTop: isHeader ? '1px solid var(--bd)' : 'inherit',
+            borderLeft: columnIndex === 0 ? '1px solid var(--bd)' : 'inherit',
             boxSizing: 'border-box',
             overflow: 'hidden',
           }}
@@ -485,6 +484,16 @@ const TRVirtualTable = <T extends Record<string, any>>({
       const sortField = columnSlide.key || columnSlide.dataIndex;
       const isCurrentSort = sortState.key === sortField;
 
+      // 处理 title 的渲染
+      const renderTitle = () => {
+        if (typeof columnSlide.title === 'function') {
+          return columnSlide.title(columnSlide);
+        }
+        return columnSlide.title;
+      };
+
+      const titleContent = renderTitle();
+
       return (
         <div
           className={`${styles.title} ${isSortable ? styles.sortable : ''}`}
@@ -496,13 +505,13 @@ const TRVirtualTable = <T extends Record<string, any>>({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            minHeight: '40px',
+            minHeight: '35px',
             width: '100%',
           }}
         >
           <div className={styles.headerContent}>
             <div className={styles.titleText}>
-              <span className={styles.name}>{columnSlide.title}</span>
+              <span className={styles.name}>{titleContent}</span>
               {columnSlide.unit ? (
                 <span className={styles.unit}>({columnSlide.unit})</span>
               ) : (
@@ -550,12 +559,14 @@ const TRVirtualTable = <T extends Record<string, any>>({
   );
 
   const onContentRender = useCallback(
-    (columnIndex: number, dataSlide: T, rowIndex: number) => {
+    (columnIndex: number, dataSlide: T, rowIndex: number): React.ReactNode => {
       const columnSlide = columns[columnIndex] || {};
-      if (columnSlide?.render) {
-        return columnSlide?.render(dataSlide, rowIndex);
-      }
       const text = dataSlide?.[columnSlide?.dataIndex || ''] as any;
+
+      if (columnSlide?.render) {
+        return columnSlide.render(text, dataSlide, rowIndex);
+      }
+
       return (
         <div className={styles.contentCell} title={String(text || '')}>
           {text != null ? String(text) : '-'}
@@ -642,7 +653,7 @@ const TRVirtualTable = <T extends Record<string, any>>({
               overscanRowCount={0}
               width={width ?? 0}
               rowCount={(displayData.length ?? 0) + 1}
-              rowHeight={({ index }) => (index === 0 ? headerHeight : 40)}
+              rowHeight={({ index }) => (index === 0 ? headerHeight : 35)}
             />
           )}
         </AutoSizer>

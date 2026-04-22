@@ -13,7 +13,7 @@ type Callback = () => void;
  * @example
  * ```ts
  * runIdleTask(() => {
- *   // 执行一些非紧急的计算任务
+ *   执行一些非紧急的计算任务
  *   performNonUrgentTask();
  * });
  * ```

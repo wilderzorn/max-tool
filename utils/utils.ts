@@ -147,6 +147,27 @@ export function randomColor(): string {
     .padStart(6, '0')}`;
 }
 
+/**
+ * 生成一个随机的 UUID（版本 4）
+ * @returns 返回一个符合 UUID 标准的随机字符串
+ * @example
+ * ```ts
+ * const uuid = getUUID(); // 返回类似 "123e4567-e89b-12d3-a456-426614174000" 的随机 UUID
+ * ```
+ */
+export const getUUID = () => {
+  // Node 14.17.0 开始支持
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    throw new Error('crypto.randomUUID not available');
+  } catch (e) {
+    // 回退方案
+    return s8();
+  }
+};
+
 export default {
   isMain,
   s4,
@@ -160,4 +181,5 @@ export default {
   gray,
   parseQuery,
   randomColor,
+  getUUID,
 };
